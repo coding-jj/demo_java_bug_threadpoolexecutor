@@ -17,22 +17,66 @@ If I start a runner thread with a `Thread.sleep()` with a `ThreadPoolExecutor` u
 `LinkedBlockingDeque` the code will not interrupt as expected. Only one of the running sub thread is interrupted, 
 but no the main thread. The program is running until the shutdown hook will exit after 10 seconds.
 
-To run the application in Eclipse I created a `ThreadInterupter` which is interrupting the main thread after 15 seconds.
+## Demo Code Minified
 
-## Demo Code
+The Demo Code consists of 4 independent java files, each has all the code it needs and can run on it's own. 
+It is the minified version of the problem.
 
-The Demo Code consists of 4 independent java files, each has all the code it needs and can totally run on it's own.
+#### Code Minified with Problem
 
-#### Code with Problem
+- [MinThreadPoolInterruptedSleep](src/MinThreadPoolInterruptedSleep.java)
+
+#### Code Minified with no Problem
+
+- [MinFixedPoolInterruptedMath](src/MinFixedPoolInterruptedMath.java)
+- [MinFixedPoolInterruptedSleep](src/MinFixedPoolInterruptedSleep.java)
+- [MinThreadPoolInterruptedMath](src/MinThreadPoolInterruptedMath.java)
+
+## Demo Code Long
+
+The Demo Code consists of 4 independent java files, each has all the code it needs and can run on it's own. The 
+application  can be run in Eclipse. I created a `ThreadInterupter` which is interrupting the main thread after 
+15 seconds. This code gives some extra information und configuration variables.
+
+#### Code Long with Problem
 
 - [ThreadPoolInterruptedSleep](src/ThreadPoolInterruptedSleep.java)
 
-#### Code with no Problem
+#### Code Long with no Problem
 
 - [FixedPoolInterruptedMath](src/FixedPoolInterruptedMath.java)
 - [FixedPoolInterruptedSleep](src/FixedPoolInterruptedSleep.java)
 - [ThreadPoolInterruptedMath](src/ThreadPoolInterruptedMath.java)
 
+## Solution
+
+[Answer by Calculator on StackOverflow](http://stackoverflow.com/a/42511433/5330578)
+with Reference to the excellent [Answer by aioobe](http://stackoverflow.com/a/3976377)
+
+
+The original Runner Thread: 
+
+        try {
+            Thread.sleep(1000);
+            System.out.println("sub tread ran");
+        } catch (final InterruptedException e) {
+            System.out.println("SUB THREAD INTERRUPTED");
+        }
+
+The modified Runner Thread:
+
+        try {
+            Thread.sleep(1000);
+            System.out.println("sub tread ran");
+        } catch (final InterruptedException e) {
+            System.out.println("SUB THREAD INTERRUPTED");
+            Thread.currentThread().interrupt();
+        }
+
+### Complete Solution
+
+- [MinThreadPoolInterruptedSleepByCalculator](src/MinThreadPoolInterruptedSleepByCalculator.java)
+- [ThreadPoolInterruptedSleepByCalculator](src/ThreadPoolInterruptedSleepByCalculator.java)
 
 ## How to Run and Test
 

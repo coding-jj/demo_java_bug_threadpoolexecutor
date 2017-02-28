@@ -1,44 +1,43 @@
 
-import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public final class ThreadPoolInterruptedMath implements Runnable {
+public final class ThreadPoolInterruptedSleepByCalculator implements Runnable {
 
     /**
-     * Thread does a labor intensive Calculation for approximately 800 Ms.
+     * Thread sleeps for the given Time.
      */
-    public static class RunnerMath implements Runnable {
+    public static class RunnerSleep implements Runnable {
 
         private final int mCount;
+        private final long mTimeOutMs;
 
         /**
-         * Thread does a labor intensive Calculation for approximately 800 Ms.
+         * Thread sleeps for the given Time.
          *
          * @param pCount Thread Counter for display
+         * @param pTimeOutMs Run Time in Milliseconds
          */
-        public RunnerMath(final int pCount) {
+        public RunnerSleep(final int pCount, final long pTimeOutMs) {
             super();
             mCount = pCount;
+            mTimeOutMs = pTimeOutMs;
         }
 
         @Override
         public void run() {
-            final Random ran = new Random();
 
-            for (int i = 0; i < 2E6; i++) {
-                Math.hypot(ran.nextDouble(), ran.nextDouble());
-
-                // Thread is interrupted
-                if (Thread.currentThread().isInterrupted()) {
-                    helperPrintStats("RunnerMath " + mCount, "INTR");
-                    return;
-                }
+            try {
+                Thread.sleep(mTimeOutMs);
+            } catch (final InterruptedException e) {
+                helperPrintStats("RunnerSleep " + mCount, "INTR");
+                Thread.currentThread().interrupt();
+                return;
             }
 
-            helperPrintStats("RunnerMath " + mCount + " fin", "");
+            helperPrintStats("RunnerSleep " + mCount + " fin", "");
         }
     }
 
@@ -133,7 +132,7 @@ public final class ThreadPoolInterruptedMath implements Runnable {
      * @param args Nothing to pass
      */
     public static void main(final String[] args) {
-        new Thread(new ThreadPoolInterruptedMath()).start();
+        new Thread(new ThreadPoolInterruptedSleepByCalculator()).start();
     }
 
     @Override
@@ -155,7 +154,7 @@ public final class ThreadPoolInterruptedMath implements Runnable {
 
         for (int i = 0; i < 1000; i++) {
 
-            final Runnable runner = new RunnerMath(i);
+            final Runnable runner = new RunnerSleep(i, 1000);
 
             ex.submit(runner);
             helperPrintStats("main " + i + " submitted", "");

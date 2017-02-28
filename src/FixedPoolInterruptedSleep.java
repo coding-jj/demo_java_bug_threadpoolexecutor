@@ -40,7 +40,7 @@ public final class FixedPoolInterruptedSleep implements Runnable {
     }
 
     /**
-     * Thread for Shutdown Hook
+     * Thread for Shutdown Hook.
      */
     public static class ShutdownHookThread extends Thread {
         private final Thread mMainThread;
@@ -104,7 +104,7 @@ public final class FixedPoolInterruptedSleep implements Runnable {
     }
 
     /**
-     * Start Time of Application
+     * Start Time of Application.
      */
     public static final long START_TIME = System.currentTimeMillis();
 
